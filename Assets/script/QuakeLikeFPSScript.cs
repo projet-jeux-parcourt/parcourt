@@ -63,7 +63,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
             unClampedRotationX -= 360;
         }
 
-        var clampedRotationX = Mathf.Clamp(unClampedRotationX, -60, 60);
+        var clampedRotationX = Mathf.Clamp(unClampedRotationX, -80, 80);
 
         cameraTransform.localRotation =
             Quaternion.Euler(new Vector3(
@@ -97,7 +97,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
             if (wantToJump)
             {
                 playerRigidBody.AddForce(
-                    Vector3.up * 10f, ForceMode.VelocityChange
+                    Vector3.up * 8f, ForceMode.VelocityChange
                 );
                 wantToJump = false;
             }
