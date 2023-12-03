@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -66,11 +67,18 @@ public class Grappin : MonoBehaviour
                 Grappin_s_Visual.enabled = true;
             }
 
-            var pointA = playerTransform.position;
-            var direction_vetor = pointA - catchPoint;
-            pointA = pointA + direction_vetor.normalized;
+            var pointA = playerTransform.position + (Vector3.up * 0.8f);
+            var direction_vetor = catchPoint - pointA;
+            var dist = direction_vetor.magnitude;
+            var direction_normalized = direction_vetor.normalized;
+            pointA = pointA + (direction_normalized * 0.5f);
             Grappin_s.position = pointA;
-            //Grappin_s.rotation = direction_vetor.; WIP
+            float dir_X = Vector3.Angle(direction_normalized, Vector3.up);
+            Vector2 n = Vector2.zero;
+            n.x = direction_normalized.x;
+            n.y = direction_normalized.z;
+            float dir_Y = Vector2.SignedAngle(n, Vector2.up);
+            Grappin_s.rotation.Set(90, 45, 0,0);
         }
     }
 }
