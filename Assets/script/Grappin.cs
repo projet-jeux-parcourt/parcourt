@@ -15,7 +15,7 @@ public class Grappin : MonoBehaviour
     public Transform MainCamera;
     public Transform playerTransform;
     public Rigidbody PlayerRigidbody;
-    public Transform playerNeck;
+    public Variables GeneralVar; // "PlayerState: 0 = mid-air, 1 = walk, 2 = wall-running
     public float grappin_sStreng;
     public float grappin_sBake;
     public float range;
@@ -28,6 +28,8 @@ public class Grappin : MonoBehaviour
     private bool actif = false;
     private bool first = true;
     private bool bake_catch = false;
+    private float History_speed_angle;
+    private bool unflooring = true;
     
     // Start is called before the first frame update
     void Start()
@@ -145,14 +147,39 @@ public class Grappin : MonoBehaviour
                 {
                     bake_catch = false;
                 }
+
                 if (tract)
                 {
                     tract = false;
-                    PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized) + (Vector3.up * 5), ForceMode.Acceleration);
+                    PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized) + (Vector3.up * 5),
+                        ForceMode.Acceleration);
 
                 }
-                
             }
+        }
+
+        var state = GeneralVar.declarations.Get("PlayerState");
+        if (state.Equals(0))
+        {
+            var temp = Quaternion.LookRotation(PlayerRigidbody.velocity).eulerAngles.y;
+            if (unflooring)
+            {
+                unflooring = false;
+            }
+            else
+            {
+                var rotation = temp - History_speed_angle;
+                if ((-3 < rotation) && (rotation < 3))
+                {
+                    playerTransform.Rotate(Vector3.up, rotation);
+                }
+            }
+
+            History_speed_angle = temp;
+        }
+        else
+        {
+            unflooring = true;
         }
     }
 }

@@ -1,24 +1,30 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class QuakeLikeFPSScript : MonoBehaviour
 {
     public Transform bodyTransform;
-    public Transform cameraTransform;
+    public Transform headTransform;
     public Rigidbody playerRigidBody;
+    public Variables GeneralVar; // 0 = mid-air, 1 = walk, 2 = wall-running
     public float speed;
     public float yawRotationSpeed;
     public float pitchRotationSpeed;
 
     private Vector3 directionIntent;
     private bool wantToJump;
-    private int state; // 0 = mid-air, 1 = walk, 2 = wall-running
+    private int state = 0;
     
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    private int GetState()
+    {
+        return state;
+    }
     // Update is called once per frame
     private void Update()
     {
@@ -49,7 +55,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
 
         var mouseYDelta = Input.GetAxis("Mouse Y");
 
-        var rotation = cameraTransform.localRotation;
+        var rotation = headTransform.localRotation;
 
         var rotationX = rotation.eulerAngles.x;
 
@@ -65,7 +71,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
 
         var clampedRotationX = Mathf.Clamp(unClampedRotationX, -80, 80);
 
-        cameraTransform.localRotation =
+        headTransform.localRotation =
             Quaternion.Euler(new Vector3(
                 clampedRotationX,
                 rotation.eulerAngles.y,
@@ -83,14 +89,15 @@ public class QuakeLikeFPSScript : MonoBehaviour
         var n = Physics.SphereCast(bodyTransform.position + Vector3.up * (0.1f + 0.45f), 0.45f, Vector3.down,
             out var hitInfo,
             0.11f);
-        state = (n) ? 1 : 0;
+        state = ((n) ? 1 : 0);
+        GeneralVar.declarations.Set("PlayerState", state);
         if (n)
         {
             var normalizedDirection = directionIntent.normalized;
             if (playerRigidBody.velocity.magnitude < speed)
             {
                 playerRigidBody.velocity = 0.9f * playerRigidBody.velocity ;
-                playerRigidBody.AddForce(bodyTransform.rotation * normalizedDirection * (speed*5), ForceMode.Acceleration);
+                playerRigidBody.AddForce(bodyTransform.rotation * normalizedDirection * (speed*7), ForceMode.Acceleration);
             }
             directionIntent = Vector3.zero;
 
@@ -99,8 +106,8 @@ public class QuakeLikeFPSScript : MonoBehaviour
                 playerRigidBody.AddForce(
                     Vector3.up * 8f, ForceMode.VelocityChange
                 );
-                wantToJump = false;
             }
         }
+        wantToJump = false;
     }
 }
