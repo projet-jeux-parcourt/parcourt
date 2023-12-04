@@ -18,8 +18,9 @@ public class Grappin : MonoBehaviour
     public Transform playerNeck;
     public float grappin_sStreng;
     public float grappin_sBake;
-    public float range; 
+    public float range;
 
+    
     private bool tract = false;
     private float bake_range;
     private bool bake = false;
@@ -27,7 +28,7 @@ public class Grappin : MonoBehaviour
     private bool actif = false;
     private bool first = true;
     private bool bake_catch = false;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -46,23 +47,24 @@ public class Grappin : MonoBehaviour
             }
             else
             {
-                if (actif)
+                var direction = MainCamera.rotation * Vector3.forward;
+                if (Physics.Raycast(MainCamera.position, direction,
+                        out var hitInfo, range))
                 {
-                    Grappin_s_Visual.enabled = false;
-                    actif = false;
-                }
-                else
-                {
-                    var direction = MainCamera.rotation * Vector3.forward;
-                    if (Physics.Raycast(MainCamera.position, direction,
-                            out var hitInfo, range))
-                    {
-                        actif = true;
-                        catchPoint = hitInfo.point;
-                    }
+                    actif = true;
+                    catchPoint = hitInfo.point;
                 }
             }
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (actif)
+            {
+                Grappin_s_Visual.enabled = false;
+                actif = false;
+            }
+        }
+
         if (actif)
         {
             if (Input.GetKey(KeyCode.LeftShift))
@@ -89,14 +91,18 @@ public class Grappin : MonoBehaviour
             float scal = Vector3.Dot(direction_normalized, PlayerRigidbody.velocity);
             if (scal < 0)
             {
-                if ((-scal*1.2f) < grappin_sBake)
+                if ((-scal*1.2f) < (grappin_sBake*Time.deltaTime))
                 {
                     PlayerRigidbody.AddForce(-scal * 1.2f * direction_normalized, ForceMode.Impulse);
 
                 }
                 else
                 {
-                    PlayerRigidbody.AddForce(-(grappin_sBake+(grappin_sStreng*0.5f)) * direction_normalized, ForceMode.Acceleration);
+                    PlayerRigidbody.AddForce((grappin_sBake+(grappin_sStreng*0.5f)) * direction_normalized, ForceMode.Acceleration);
+                    if (dist < range)
+                    {
+                        bake_range = dist;
+                    }
                 }
             }
         }
@@ -116,12 +122,14 @@ public class Grappin : MonoBehaviour
             }
             var pointA = playerTransform.position + (Vector3.up * 0.8f);
             var direction_vetor = catchPoint - pointA;
+            var directionH = (Vector3.forward * direction_vetor.z) + (Vector3.right * direction_vetor.x);
+            pointA = pointA + (directionH.normalized * 0.6f);
+            direction_vetor = catchPoint - pointA;
             var dist = direction_vetor.magnitude;
             var direction_normalized = direction_vetor.normalized;
-            pointA = pointA + (direction_normalized * 0.5f);
             Grappin_s.position = pointA;
             Grappin_s.rotation = Quaternion.LookRotation(direction_normalized);
-            Grappin_s.localScale = Vector3.one + (Vector3.forward * dist);
+            Grappin_s.localScale = Vector3.one + (Vector3.forward * (dist-0.8f));
             if (bake)
             {
                 bake = false;

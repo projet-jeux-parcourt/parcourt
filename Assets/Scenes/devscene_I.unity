@@ -358,7 +358,7 @@ MonoBehaviour:
   PlayerRigidbody: {fileID: 298640663}
   playerNeck: {fileID: 49961203}
   grappin_sStreng: 15
-  grappin_sBake: 50
+  grappin_sBake: 75
   range: 50
 --- !u!114 &395330972
 MonoBehaviour:
