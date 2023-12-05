@@ -77,7 +77,7 @@ public class Grappin : MonoBehaviour
                 tract = true;
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.Q))
             {
                 bake = true;
             }
