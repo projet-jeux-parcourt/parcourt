@@ -169,7 +169,7 @@ public class Grappin : MonoBehaviour
             else
             {
                 var rotation = temp - History_speed_angle;
-                if ((-3 < rotation) && (rotation < 3))
+                if ((-2.5f < rotation) && (rotation < 2.5f))
                 {
                     playerTransform.Rotate(Vector3.up, rotation);
                 }

@@ -15,6 +15,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
     private Vector3 directionIntent;
     private bool wantToJump;
     private int state = 0;
+    private Vector2 rotationWanted = Vector2.zero;
     
     private void Start()
     {
@@ -51,15 +52,28 @@ public class QuakeLikeFPSScript : MonoBehaviour
 
         var mouseXDelta = Input.GetAxis("Mouse X");
 
-        bodyTransform.Rotate(Vector3.up, Time.deltaTime * yawRotationSpeed * mouseXDelta);
+        rotationWanted.x += mouseXDelta;
 
         var mouseYDelta = Input.GetAxis("Mouse Y");
+        
+        rotationWanted.y += mouseYDelta;
 
+        
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            wantToJump = true;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        bodyTransform.Rotate(Vector3.up, Time.deltaTime * yawRotationSpeed * rotationWanted.x);
         var rotation = headTransform.localRotation;
 
         var rotationX = rotation.eulerAngles.x;
 
-        rotationX += -Time.deltaTime * pitchRotationSpeed * mouseYDelta;
+        rotationX += -Time.deltaTime * pitchRotationSpeed * rotationWanted.y;
         
 
         var unClampedRotationX = rotationX;
@@ -78,14 +92,8 @@ public class QuakeLikeFPSScript : MonoBehaviour
                 rotation.eulerAngles.z
             ));
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            wantToJump = true;
-        }
-    }
-
-    private void FixedUpdate()
-    {
+        rotationWanted = Vector2.zero;
+        
         var n = Physics.SphereCast(bodyTransform.position + Vector3.up * (0.1f + 0.45f), 0.45f, Vector3.down,
             out var hitInfo,
             0.11f);
