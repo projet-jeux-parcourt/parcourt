@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class Grappin : MonoBehaviour
 {
     public MeshRenderer Grappin_s_Visual;
+    public RawImage ShowCross;
     public Transform Grappin_s;
     public Transform MainCamera;
     public Transform playerTransform;
@@ -34,13 +35,17 @@ public class Grappin : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ShowCross.enabled = false;
         Grappin_s_Visual.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        var direction = MainCamera.rotation * Vector3.forward;
+        var possible = (Physics.Raycast(MainCamera.position, direction,
+            out var hitInfo, range));
+        ShowCross.enabled = possible;
         if (Input.GetMouseButtonDown(0))
         {
             if (first)
@@ -49,9 +54,7 @@ public class Grappin : MonoBehaviour
             }
             else
             {
-                var direction = MainCamera.rotation * Vector3.forward;
-                if (Physics.Raycast(MainCamera.position, direction,
-                        out var hitInfo, range))
+                if (possible)
                 {
                     actif = true;
                     catchPoint = hitInfo.point;
@@ -74,7 +77,7 @@ public class Grappin : MonoBehaviour
                 tract = true;
             }
 
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(KeyCode.A))
             {
                 bake = true;
             }
