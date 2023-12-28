@@ -389,6 +389,7 @@ MonoBehaviour:
   grappin_sStreng: 15
   grappin_sBake: 75
   range: 50
+  tank: 255
 --- !u!114 &395330972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1946,6 +1947,14 @@ PrefabInstance:
     - target: {fileID: 1403617063694388651, guid: d612a194f132b40488d2c109dbd94793, type: 3}
       propertyPath: m_Name
       value: interface
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030622959587779445, guid: d612a194f132b40488d2c109dbd94793, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4302235942138831669, guid: d612a194f132b40488d2c109dbd94793, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4306193648915201218, guid: d612a194f132b40488d2c109dbd94793, type: 3}
       propertyPath: m_Pivot.x
