@@ -16,21 +16,23 @@ public class Grappin : MonoBehaviour
     public Transform MainCamera;
     public Transform playerTransform;
     public Rigidbody PlayerRigidbody;
-    public Variables GeneralVar; // "PlayerState: 0 = mid-air, 1 = walk, 2 = wall-running
+    public Variables GeneralVar; // "PlayerState: 0 = mid-air, 1 = walk, 2 = wall-running ; Grappin_sTank: reserve du grappin
     public float grappin_sStreng;
     public float grappin_sBake;
     public float range;
+    public float tank;
+
 
     
-    private bool tract = false;
-    private float bake_range;
-    private bool bake = false;
-    private Vector3 catchPoint;
-    private bool actif = false;
-    private bool first = true;
-    private bool bake_catch = false;
-    private float History_speed_angle;
-    private bool unflooring = true;
+    private bool _tract ;
+    private float _bake_range;
+    private bool _bake = false;
+    private Vector3 _catchPoint;
+    private bool _actif = false;
+    private bool _first = true;
+    private bool _bake_catch = false;
+    private float _History_speed_angle;
+    private bool _unflooring = true;
     
     // Start is called before the first frame update
     void Start()
@@ -48,50 +50,50 @@ public class Grappin : MonoBehaviour
         ShowCross.enabled = possible;
         if (Input.GetMouseButtonDown(0))
         {
-            if (first)
+            if (_first)
             {
-                first = false;
+                _first = false;
             }
             else
             {
                 if (possible)
                 {
-                    actif = true;
-                    catchPoint = hitInfo.point;
+                    _actif = true;
+                    _catchPoint = hitInfo.point;
                 }
             }
         }
         if (Input.GetMouseButtonDown(1))
         {
-            if (actif)
+            if (_actif)
             {
                 Grappin_s_Visual.enabled = false;
-                actif = false;
+                _actif = false;
             }
         }
 
-        if (actif)
+        if (_actif)
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                tract = true;
+                _tract = true;
             }
 
             if (Input.GetKey(KeyCode.Q))
             {
-                bake = true;
+                _bake = true;
             }
         }
     }
 
     private void Bake_now(float dist, Vector3 direction_normalized)
     {
-        if (!bake_catch)
+        if (!_bake_catch)
         { 
-            bake_range = dist;
-            bake_catch = true;
+            _bake_range = dist;
+            _bake_catch = true;
         }
-        if (dist > bake_range)
+        if (dist > _bake_range)
         {
             float scal = Vector3.Dot(direction_normalized, PlayerRigidbody.velocity);
             if (scal < 0)
@@ -106,7 +108,7 @@ public class Grappin : MonoBehaviour
                     PlayerRigidbody.AddForce((grappin_sBake+(grappin_sStreng*0.5f)) * direction_normalized, ForceMode.Acceleration);
                     if (dist < range)
                     {
-                        bake_range = dist;
+                        _bake_range = dist;
                     }
                 }
             }
@@ -114,30 +116,30 @@ public class Grappin : MonoBehaviour
         if (dist > (range * 1.1f))
         {
             Grappin_s_Visual.enabled = false;
-            actif = false;
+            _actif = false;
         }
     }
     private void FixedUpdate()
     {
-        if (actif)
+        if (_actif)
         {
             if (!Grappin_s_Visual.enabled)
             {
                 Grappin_s_Visual.enabled = true;
             }
             var pointA = playerTransform.position + (Vector3.up * 0.8f);
-            var direction_vetor = catchPoint - pointA;
+            var direction_vetor = _catchPoint - pointA;
             var directionH = (Vector3.forward * direction_vetor.z) + (Vector3.right * direction_vetor.x);
             pointA = pointA + (directionH.normalized * 0.6f);
-            direction_vetor = catchPoint - pointA;
+            direction_vetor = _catchPoint - pointA;
             var dist = direction_vetor.magnitude;
             var direction_normalized = direction_vetor.normalized;
             Grappin_s.position = pointA;
             Grappin_s.rotation = Quaternion.LookRotation(direction_normalized);
             Grappin_s.localScale = Vector3.one + (Vector3.forward * (dist-0.8f));
-            if (bake)
+            if (_bake)
             {
-                bake = false;
+                _bake = false;
                 Bake_now(dist, direction_normalized);
             }
             else
@@ -148,15 +150,22 @@ public class Grappin : MonoBehaviour
                 }
                 else
                 {
-                    bake_catch = false;
+                    _bake_catch = false;
                 }
 
-                if (tract)
+                if (_tract)
                 {
-                    tract = false;
-                    PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized) + (Vector3.up * 5),
-                        ForceMode.Acceleration);
-
+                    _tract = false;
+                    if (tank > 0)
+                    {
+                        PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized) + (Vector3.up * 5),
+                            ForceMode.Acceleration);
+                        tank -= Time.deltaTime*10;
+                    }
+                    else
+                    {
+                        tank = 0;
+                    }
                 }
             }
         }
@@ -165,24 +174,24 @@ public class Grappin : MonoBehaviour
         if (state.Equals(0))
         {
             var temp = Quaternion.LookRotation(PlayerRigidbody.velocity).eulerAngles.y;
-            if (unflooring)
+            if (_unflooring)
             {
-                unflooring = false;
+                _unflooring = false;
             }
             else
             {
-                var rotation = temp - History_speed_angle;
+                var rotation = temp - _History_speed_angle;
                 if ((-2.5f < rotation) && (rotation < 2.5f))
                 {
                     playerTransform.Rotate(Vector3.up, rotation);
                 }
             }
 
-            History_speed_angle = temp;
+            _History_speed_angle = temp;
         }
         else
         {
-            unflooring = true;
+            _unflooring = true;
         }
     }
 }
