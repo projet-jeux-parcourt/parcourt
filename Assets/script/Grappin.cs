@@ -12,11 +12,12 @@ public class Grappin : MonoBehaviour
 {
     public MeshRenderer Grappin_s_Visual;
     public RawImage ShowCross;
+    public RectTransform tankContainer;
     public Transform Grappin_s;
     public Transform MainCamera;
     public Transform playerTransform;
     public Rigidbody PlayerRigidbody;
-    public Variables GeneralVar; // "PlayerState: 0 = mid-air, 1 = walk, 2 = wall-running ; Grappin_sTank: reserve du grappin
+    public Variables GeneralVar; // "PlayerState: 0 = mid-air, 1 = walk, 2 = wall-running
     public float grappin_sStreng;
     public float grappin_sBake;
     public float range;
@@ -25,6 +26,7 @@ public class Grappin : MonoBehaviour
 
     
     private bool _tract ;
+    private int _tank_size = 255;
     private float _bake_range;
     private bool _bake = false;
     private Vector3 _catchPoint;
@@ -193,5 +195,7 @@ public class Grappin : MonoBehaviour
         {
             _unflooring = true;
         }
+        tankContainer.anchoredPosition = Vector2.right * (tank * 255 / _tank_size);
+        tankContainer.sizeDelta = (Vector2.right * (tank * 510 / _tank_size)) + (Vector2.up * tankContainer.sizeDelta.y);
     }
 }
