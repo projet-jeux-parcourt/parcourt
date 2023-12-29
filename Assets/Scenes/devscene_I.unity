@@ -381,7 +381,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grappin_s_Visual: {fileID: 936672098}
   ShowCross: {fileID: 1763092853}
-  tankContainer: {fileID: 1861228591}
+  tankBar: {fileID: 1861228591}
+  cooldownBar: {fileID: 7549954635585125422}
   Grappin_s: {fileID: 570803177}
   MainCamera: {fileID: 963194228}
   playerTransform: {fileID: 298640664}
@@ -391,6 +392,7 @@ MonoBehaviour:
   grappin_sBake: 75
   range: 50
   tank: 255
+  cooldown: 0
 --- !u!114 &395330972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2063,3 +2065,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d612a194f132b40488d2c109dbd94793, type: 3}
+--- !u!224 &7549954635585125422 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 755553236723052627, guid: d612a194f132b40488d2c109dbd94793, type: 3}
+  m_PrefabInstance: {fileID: 7549954635585125421}
+  m_PrefabAsset: {fileID: 0}

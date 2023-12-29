@@ -12,7 +12,8 @@ public class Grappin : MonoBehaviour
 {
     public MeshRenderer Grappin_s_Visual;
     public RawImage ShowCross;
-    public RectTransform tankContainer;
+    public RectTransform tankBar;
+    public RectTransform cooldownBar;
     public Transform Grappin_s;
     public Transform MainCamera;
     public Transform playerTransform;
@@ -22,10 +23,10 @@ public class Grappin : MonoBehaviour
     public float grappin_sBake;
     public float range;
     public float tank;
-
-
+    public float cooldown;
     
     private bool _tract ;
+    private float _cooldown_state = 0;
     private int _tank_size = 255;
     private float _bake_range;
     private bool _bake = false;
@@ -47,8 +48,8 @@ public class Grappin : MonoBehaviour
     void Update()
     {
         var direction = MainCamera.rotation * Vector3.forward;
-        var possible = (Physics.Raycast(MainCamera.position, direction,
-            out var hitInfo, range));
+        var possible = ((Physics.Raycast(MainCamera.position, direction,
+            out var hitInfo, range)) && (_cooldown_state<0));
         ShowCross.enabled = possible;
         if (Input.GetMouseButtonDown(0))
         {
@@ -62,6 +63,8 @@ public class Grappin : MonoBehaviour
                 {
                     _actif = true;
                     _catchPoint = hitInfo.point;
+                    tank -= 10;
+                    _cooldown_state = cooldown;
                 }
             }
         }
@@ -195,7 +198,11 @@ public class Grappin : MonoBehaviour
         {
             _unflooring = true;
         }
-        tankContainer.anchoredPosition = Vector2.right * (tank * 255 / _tank_size);
-        tankContainer.sizeDelta = (Vector2.right * (tank * 510 / _tank_size)) + (Vector2.up * tankContainer.sizeDelta.y);
+
+        _cooldown_state -= Time.deltaTime;
+        cooldownBar.anchoredPosition = (Vector2.right * (_cooldown_state * 250 / cooldown)) + (Vector2.up * cooldownBar.anchoredPosition.y);
+        cooldownBar.sizeDelta = (Vector2.right * (_cooldown_state * 500 / cooldown)) + (Vector2.up * cooldownBar.sizeDelta.y);
+        tankBar.anchoredPosition = Vector2.right * (tank * 250 / _tank_size);
+        tankBar.sizeDelta = (Vector2.right * (tank * 500 / _tank_size)) + (Vector2.up * tankBar.sizeDelta.y);
     }
 }
