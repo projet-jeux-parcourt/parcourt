@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 public class Grappin : MonoBehaviour
@@ -186,7 +180,7 @@ public class Grappin : MonoBehaviour
             else
             {
                 var rotation = temp - _History_speed_angle;
-                if ((-2.5f < rotation) && (rotation < 2.5f))
+                if ((-2.5f < rotation) & (rotation < 2.5f))
                 {
                     playerTransform.Rotate(Vector3.up, rotation);
                 }
@@ -200,8 +194,9 @@ public class Grappin : MonoBehaviour
         }
 
         _cooldown_state -= Time.deltaTime;
-        cooldownBar.anchoredPosition = (Vector2.right * (_cooldown_state * 250 / cooldown)) + (Vector2.up * cooldownBar.anchoredPosition.y);
-        cooldownBar.sizeDelta = (Vector2.right * (_cooldown_state * 500 / cooldown)) + (Vector2.up * cooldownBar.sizeDelta.y);
+        var cooldownTemp = cooldown - ((_cooldown_state>0)?_cooldown_state:0);
+        cooldownBar.anchoredPosition = (Vector2.right * (cooldownTemp * 250 / cooldown)) + (Vector2.up * cooldownBar.anchoredPosition.y);
+        cooldownBar.sizeDelta = (Vector2.right * (cooldownTemp * 500 / cooldown)) + (Vector2.up * cooldownBar.sizeDelta.y);
         tankBar.anchoredPosition = Vector2.right * (tank * 250 / _tank_size);
         tankBar.sizeDelta = (Vector2.right * (tank * 500 / _tank_size)) + (Vector2.up * tankBar.sizeDelta.y);
     }
