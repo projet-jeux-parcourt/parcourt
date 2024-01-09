@@ -16,13 +16,14 @@ public class TimerScript : MonoBehaviour
 
     private void Start()
     {
-        TimeSet=countdownTime;
+        TimeSet = countdownTime;
         if (timerText == null || timeBar == null)
         {
             Debug.LogError("Veuillez attribuer les composants TextMeshProUGUI et Image (ou autre objet d'UI) dans l'éditeur Unity.");
         }
         else
         {
+
             UpdateTimer();
         }
     }
@@ -37,9 +38,9 @@ public class TimerScript : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             LoadNewScene();
         }
-
+        PlayerPrefs.SetFloat("FinalTime", countdownTime);
         UpdateTimer();
-        UpdateTimeBar(); 
+        UpdateTimeBar();
     }
 
     private void UpdateTimer()
@@ -49,18 +50,15 @@ public class TimerScript : MonoBehaviour
         timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
     }
 
-
     private void UpdateTimeBar()
-{
-    float percentage = countdownTime / TimeSet;
-    float newWidth = initialWidth * percentage;
-    RectTransform rt = timeBar.GetComponent<RectTransform>();
-    rt.sizeDelta = new Vector2(newWidth, rt.sizeDelta.y);
-    Color lerpedColor = Color.Lerp(endColor, startColor, percentage);
-    timeBar.color = lerpedColor;
-}
-
-
+    {
+        float percentage = countdownTime / TimeSet;
+        float newWidth = initialWidth * percentage;
+        RectTransform rt = timeBar.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(newWidth, rt.sizeDelta.y);
+        Color lerpedColor = Color.Lerp(endColor, startColor, percentage);
+        timeBar.color = lerpedColor;
+    }
 
     private void LoadNewScene()
     {
