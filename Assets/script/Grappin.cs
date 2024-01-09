@@ -30,6 +30,7 @@ public class Grappin : MonoBehaviour
     private bool _bake_catch = false;
     private float _History_speed_angle;
     private bool _unflooring = true;
+    private bool _backing = false;
     
     // Start is called before the first frame update
     void Start()
@@ -97,6 +98,7 @@ public class Grappin : MonoBehaviour
             float scal = Vector3.Dot(direction_normalized, PlayerRigidbody.velocity);
             if (scal < 0)
             {
+                _backing = true;
                 if ((-scal*1.2f) < (grappin_sBake*Time.deltaTime))
                 {
                     PlayerRigidbody.AddForce(-scal * 1.2f * direction_normalized, ForceMode.Impulse);
@@ -157,7 +159,7 @@ public class Grappin : MonoBehaviour
                     _tract = false;
                     if (tank > 0)
                     {
-                        PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized) + (Vector3.up * 5),
+                        PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized),
                             ForceMode.Acceleration);
                         tank -= Time.deltaTime*10;
                     }
@@ -170,7 +172,7 @@ public class Grappin : MonoBehaviour
         }
 
         var state = GeneralVar.declarations.Get("PlayerState");
-        if (state.Equals(0))
+        if (state.Equals(0) & _actif & (_backing | _tract))
         {
             var temp = Quaternion.LookRotation(PlayerRigidbody.velocity).eulerAngles.y;
             if (_unflooring)
@@ -199,5 +201,6 @@ public class Grappin : MonoBehaviour
         cooldownBar.sizeDelta = (Vector2.right * (cooldownTemp * 500 / cooldown)) + (Vector2.up * cooldownBar.sizeDelta.y);
         tankBar.anchoredPosition = Vector2.right * (tank * 250 / _tank_size);
         tankBar.sizeDelta = (Vector2.right * (tank * 500 / _tank_size)) + (Vector2.up * tankBar.sizeDelta.y);
+        _backing = false;
     }
 }

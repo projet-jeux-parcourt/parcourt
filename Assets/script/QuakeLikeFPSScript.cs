@@ -1,5 +1,7 @@
 using System;
 using Unity.VisualScripting;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class QuakeLikeFPSScript : MonoBehaviour
@@ -7,6 +9,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
     public Transform bodyTransform;
     public Transform headTransform;
     public Rigidbody playerRigidBody;
+    public LayerMask wallRunnable;
     public Variables GeneralVar; // 0 = mid-air, 1 = walk, 2 = wall-running
     public float speed;
     public float yawRotationSpeed;
@@ -14,11 +17,12 @@ public class QuakeLikeFPSScript : MonoBehaviour
     public float wallRunForce;
 
     private Vector3 directionIntent;
-    private bool wantToJump;
+    private bool wantToJump, wantToFly;
     private int state = 0;
     private Vector2 rotationWanted = Vector2.zero;
     private bool isWallRunning;
     private float wallRunStartHeight;
+    private Transform wallWhereYouRun;
 
     private void Start()
     {
@@ -65,34 +69,36 @@ public class QuakeLikeFPSScript : MonoBehaviour
             wantToJump = true;
         }
 
-        CheckForWallRun();
+        if (Input.GetKey(KeyCode.Space))
+        {
+            wantToFly = true;
+        }
     }
 
     private void CheckForWallRun()
     {
-        RaycastHit hit;
-        bool isWallRight = Physics.Raycast(transform.position, transform.right, out hit, 1f);
-        bool isWallLeft = Physics.Raycast(transform.position, -transform.right, out hit, 1f);
-
-        // Modification pour vérifier si le mur touché est nommé "cube"
-        if ((isWallRight || isWallLeft) && hit.collider.gameObject.name == "cube")
+        if (state == 0)
         {
-            if (Input.GetKey(KeyCode.W) && state == 0) // Vérifie si le joueur est en l'air
+            var hitInfo = Physics.OverlapSphere(bodyTransform.position + Vector3.up * (0.1f + 0.8f), 0.8f, wallRunnable);
+            
+            if (hitInfo.Length>0)
             {
-                StartWallRun();
+                StartWallRun(hitInfo[0].transform);
             }
         }
     }
 
-    private void StartWallRun()
+    private void StartWallRun(Transform wallWhereYouRunArg)
     {
         isWallRunning = true;
         wallRunStartHeight = playerRigidBody.position.y;
-        state = 2; // État de wall-running
+        wallWhereYouRun = wallWhereYouRunArg;
+        state = 2; // ï¿½tat de wall-running
     }
 
     private void FixedUpdate()
     {
+        CheckForWallRun();
         bodyTransform.Rotate(Vector3.up, Time.deltaTime * yawRotationSpeed * rotationWanted.x);
         var rotation = headTransform.localRotation;
 
@@ -106,32 +112,73 @@ public class QuakeLikeFPSScript : MonoBehaviour
         rotationWanted = Vector2.zero;
 
         var isGrounded = Physics.SphereCast(bodyTransform.position + Vector3.up * (0.1f + 0.45f), 0.45f, Vector3.down, out var hitInfo, 0.11f);
-        state = isGrounded ? 1 : 0;
+        if ((state == 2)  &  IsWallRunningConditionMet())
+        {
+            state = 2;
+        }
+        else
+        {
+            state = isGrounded ? 1 : 0;
+            isWallRunning = false;
+
+        }
         GeneralVar.declarations.Set("PlayerState", state);
 
-        if (isGrounded || isWallRunning)
+        if (isGrounded)
         {
-            var normalizedDirection = directionIntent.normalized;
+            playerRigidBody.velocity = 0.9f * playerRigidBody.velocity;
             if (playerRigidBody.velocity.magnitude < speed)
             {
-                playerRigidBody.velocity = 0.9f * playerRigidBody.velocity;
+                var normalizedDirection = directionIntent.normalized;
                 playerRigidBody.AddForce(bodyTransform.rotation * normalizedDirection * (speed * 7), ForceMode.Acceleration);
             }
 
             if (wantToJump)
             {
-                playerRigidBody.AddForce(Vector3.up * 8f, ForceMode.VelocityChange);
-                isWallRunning = false; // Arrête le wall-run si le joueur saute
+                playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.VelocityChange);
             }
-        }
-
-        if (isWallRunning)
+        } 
+        else if (isWallRunning)
         {
             WallRunning();
+        }
+        if (state==0)
+        {
+            if (playerRigidBody.velocity.magnitude < speed*2)
+            {
+                var normalizedDirection = directionIntent.normalized;
+                playerRigidBody.AddForce(bodyTransform.rotation * normalizedDirection * (speed), ForceMode.Acceleration);
+            }
+            if (wantToFly)
+            {
+                playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.Acceleration);
+            }
         }
 
         directionIntent = Vector3.zero;
         wantToJump = false;
+        wantToFly = false;
+    }
+
+    private bool isforward(float a, float b)
+    {
+        var diff = norme(a-b)%360;
+        return !(90<diff & diff<270);
+    }
+
+    private float norme(float value)
+    {
+        return value < 0 ? -value : value;
+    }
+
+    private bool isOnRightSide()
+    {
+        return Vector3.Dot(playerRigidBody.position-wallWhereYouRun.position, wallWhereYouRun.rotation * Vector3.right) > 0;
+    }
+
+    private bool hasOnRightSide()
+    {
+        return Vector3.Dot(playerRigidBody.position-wallWhereYouRun.position, bodyTransform.rotation * Vector3.right) > 0;
     }
 
     private void WallRunning()
@@ -140,11 +187,39 @@ public class QuakeLikeFPSScript : MonoBehaviour
         playerRigidBody.position = new Vector3(playerRigidBody.position.x, wallRunStartHeight, playerRigidBody.position.z);
 
         // Appliquez une force horizontale pour maintenir le joueur contre le mur
-        Vector3 wallRunDirection = Vector3.ProjectOnPlane(bodyTransform.forward, Vector3.up).normalized;
-        playerRigidBody.AddForce(wallRunDirection * wallRunForce, ForceMode.Acceleration);
-
+        var isOnRight = isOnRightSide();
+        if (isOnRight)
+        {
+            playerRigidBody.AddForce(wallWhereYouRun.rotation * Vector3.left * (wallRunForce), 
+                ForceMode.Acceleration
+                );
+        }
+        else
+        {
+            playerRigidBody.AddForce(wallWhereYouRun.rotation * Vector3.right * (wallRunForce), 
+                ForceMode.Acceleration
+                );
+        }
+        
+        
+        // deplacements
+        playerRigidBody.velocity = 0.95f * playerRigidBody.velocity;
+        if (playerRigidBody.velocity.magnitude <(speed*1.5))
+        {
+            int n = isforward(bodyTransform.rotation.eulerAngles.y, wallWhereYouRun.rotation.eulerAngles.y)?1:-1;
+            var directionInt = directionIntent.normalized.z * n;
+            playerRigidBody.AddForce(wallWhereYouRun.rotation * Vector3.forward * (directionInt * speed * 7), ForceMode.Acceleration);
+        }
+        
         // Pour sortir du wall-run (par exemple, en sautant)
-        if (wantToJump || !IsWallRunningConditionMet())
+        if (wantToJump)
+        {
+            var direction = wallWhereYouRun.rotation * (isOnRight ? Vector3.right : Vector3.left);
+            playerRigidBody.AddForce((Vector3.up * 5f) + (direction *5f), ForceMode.VelocityChange);
+            isWallRunning = false;
+        }
+
+        if (((hasOnRightSide()?1:-1) * directionIntent.x) > 0)
         {
             isWallRunning = false;
         }
@@ -152,13 +227,9 @@ public class QuakeLikeFPSScript : MonoBehaviour
 
     private bool IsWallRunningConditionMet()
     {
-        // Implémentez ici la logique pour déterminer si les conditions pour continuer le wall-run sont toujours remplies
-        // Par exemple, vérifier si le joueur est toujours à côté d'un mur "wallToRun"
-        return Physics.Raycast(transform.position, transform.right, 1f) || Physics.Raycast(transform.position, -transform.right, 1f);
-    }
-
-    private bool IsGrounded()
-    {
-        return Physics.SphereCast(bodyTransform.position + Vector3.up * 0.5f, 0.45f, Vector3.down, out var hitInfo, 1f);
+        // Implï¿½mentez ici la logique pour dï¿½terminer si les conditions pour continuer le wall-run sont toujours remplies
+        // Par exemple, vï¿½rifier si le joueur est toujours ï¿½ cï¿½tï¿½ d'un mur "wallToRun"
+        var met = Physics.CheckSphere(bodyTransform.position + Vector3.up * (0.1f + 0.8f), 0.8f, wallRunnable);
+        return met;
     }
 }
