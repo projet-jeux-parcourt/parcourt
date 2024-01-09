@@ -3,8 +3,8 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI;
-    public GameObject clickBlocker;
     private bool isPaused = false;
+    private CursorLockMode previousMouse;
 
     void Update()
     {
@@ -15,7 +15,7 @@ public class PauseMenu : MonoBehaviour
                 ResumeGame();
             }
             else
-            {
+            { 
                 PauseGame();
             }
         }
@@ -23,19 +23,21 @@ public class PauseMenu : MonoBehaviour
 
     void PauseGame()
     {
-        Time.timeScale = 0f; // Arrête le temps dans le jeu
+        previousMouse=Cursor.lockState;
+        Time.timeScale = 0f; 
         pauseMenuUI.SetActive(true);
-        clickBlocker.SetActive(true); // Active le masque pour intercepter les clics
         isPaused = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ResumeGame()
     {
-        Time.timeScale = 1f; // Reprend le temps dans le jeu
+        Cursor.lockState=previousMouse;
+        Time.timeScale = 1f; 
         pauseMenuUI.SetActive(false);
-        clickBlocker.SetActive(false); // Désactive le masque
         isPaused = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
-
-    // Ajoutez d'autres fonctions pour gérer les options du menu (quitter le jeu, paramètres, etc.) si nécessaire
 }
