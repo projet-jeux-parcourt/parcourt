@@ -1,21 +1,29 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TimerScript : MonoBehaviour
 {
     public TextMeshProUGUI timerText;
-    public float countdownTime = 60.0f;
+    public RawImage timeBar;
+    public float countdownTime = 180.0f;
+    public float initialWidth = 400.0f;
+    private float TimeSet;
     public LoadSceneScript loadSceneScript;
+    public Color startColor = Color.green;
+    public Color endColor = Color.red;
 
     private void Start()
     {
-        if (timerText == null)
+        TimeSet = countdownTime;
+        if (timerText == null || timeBar == null)
         {
-            Debug.LogError("Veuillez attribuer le composant TextMeshProUGUI dans l'éditeur Unity.");
+            Debug.LogError("Veuillez attribuer les composants TextMeshProUGUI et Image (ou autre objet d'UI) dans l'éditeur Unity.");
         }
         else
         {
+
             UpdateTimer();
         }
     }
@@ -27,15 +35,29 @@ public class TimerScript : MonoBehaviour
         if (countdownTime <= 0.0f)
         {
             countdownTime = 0.0f;
+            Cursor.lockState = CursorLockMode.None;
             LoadNewScene();
         }
-
+        PlayerPrefs.SetFloat("FinalTime", countdownTime);
         UpdateTimer();
+        UpdateTimeBar();
     }
 
     private void UpdateTimer()
     {
-        timerText.text = "Temps restant : " + Mathf.Ceil(countdownTime).ToString();
+        float minutes = Mathf.Floor(countdownTime / 60);
+        float seconds = Mathf.Floor(countdownTime % 60);
+        timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
+    }
+
+    private void UpdateTimeBar()
+    {
+        float percentage = countdownTime / TimeSet;
+        float newWidth = initialWidth * percentage;
+        RectTransform rt = timeBar.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(newWidth, rt.sizeDelta.y);
+        Color lerpedColor = Color.Lerp(endColor, startColor, percentage);
+        timeBar.color = lerpedColor;
     }
 
     private void LoadNewScene()
