@@ -58,7 +58,6 @@ public class Grappin : MonoBehaviour
                 {
                     _actif = true;
                     _catchPoint = hitInfo.point;
-                    tank -= 10;
                     _cooldown_state = cooldown;
                 }
             }
