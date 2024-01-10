@@ -187,7 +187,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
     private void WallRunning()
     {
         // Maintenez la hauteur Y constante pendant le wall-run
-        if (wallRunStartHeight < playerRigidBody.position.y)
+        if (wallRunStartHeight > playerRigidBody.position.y)
         {
             playerRigidBody.position = new Vector3(playerRigidBody.position.x, wallRunStartHeight, playerRigidBody.position.z);
         }
