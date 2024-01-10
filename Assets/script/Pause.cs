@@ -2,42 +2,42 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenuUI;
-    private bool isPaused = false;
-    private CursorLockMode previousMouse;
+    public GameObject pauseCanvas;
+    public bool isPaused = false;
 
-    void Update()
+    private void Start()
+    {
+        PauseMenuDisable();
+    }
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPaused)
+            if (isPaused == true)
             {
-                ResumeGame();
+                PauseMenuDisable();
             }
             else
-            { 
-                PauseGame();
+            {
+                PauseMenuEnable();
             }
         }
     }
 
-    void PauseGame()
+    public void PauseMenuEnable()
     {
-        previousMouse=Cursor.lockState;
-        Time.timeScale = 0f; 
-        pauseMenuUI.SetActive(true);
-        isPaused = true;
+        pauseCanvas.SetActive(true);
+        //Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        isPaused = true;
     }
 
-    public void ResumeGame()
+    public void PauseMenuDisable()
     {
-        Cursor.lockState=previousMouse;
-        Time.timeScale = 1f; 
-        pauseMenuUI.SetActive(false);
-        isPaused = false;
+        pauseCanvas.SetActive(false);
+        //Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        isPaused = false;
     }
 }
