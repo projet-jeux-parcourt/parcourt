@@ -231,11 +231,6 @@ public class QuakeLikeFPSScript : MonoBehaviour
             playerRigidBody.AddForce((Vector3.up * 5f) + (direction *5f), ForceMode.VelocityChange);
             isWallRunning = false;
         }
-
-        if (((hasOnRightSide()?1:-1) * directionIntent.x) > 0)
-        {
-            isWallRunning = false;
-        }
     }
 
     private bool IsWallRunningConditionMet()
