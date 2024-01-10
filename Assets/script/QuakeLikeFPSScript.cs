@@ -10,7 +10,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
     public Transform playerTransform;
     public Rigidbody playerRigidBody;
     public LayerMask wallRunnable;
-    public Variables GeneralVar; // 0 = mid-air, 1 = walk, 2 = wall-running
+    public Variables GeneralVar; // 0 = mid-air, 1 = walk, 2 = wall-running / playerFlying:bool
     public float speed;
     public float yawRotationSpeed;
     public float pitchRotationSpeed;
@@ -122,7 +122,8 @@ public class QuakeLikeFPSScript : MonoBehaviour
             isWallRunning = false;
 
         }
-        GeneralVar.declarations.Set("PlayerState", state);
+        var genVar_declaration = GeneralVar.declarations;
+        genVar_declaration.Set("PlayerState", state);
 
         if (isGrounded)
         {
@@ -148,9 +149,9 @@ public class QuakeLikeFPSScript : MonoBehaviour
             if (playerRigidBody.velocity.magnitude < speed*1.6)
             {
                 var normalizedDirection = directionIntent.normalized;
-                playerRigidBody.AddForce(playerTransform.rotation * normalizedDirection * (speed*3), ForceMode.Acceleration);
+                playerRigidBody.AddForce(playerTransform.rotation * normalizedDirection * (speed*2), ForceMode.Acceleration);
             }
-            if (wantToFly)
+            if (wantToFly || genVar_declaration.Get("playerFlying").Equals(true))
             {
                 playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.Acceleration);
             }
@@ -159,6 +160,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
         directionIntent = Vector3.zero;
         wantToJump = false;
         wantToFly = false;
+        genVar_declaration.Set("playerFlying", false);
     }
 
     private bool isforward(float a, float b)
@@ -185,7 +187,14 @@ public class QuakeLikeFPSScript : MonoBehaviour
     private void WallRunning()
     {
         // Maintenez la hauteur Y constante pendant le wall-run
-        playerRigidBody.position = new Vector3(playerRigidBody.position.x, wallRunStartHeight, playerRigidBody.position.z);
+        if (wallRunStartHeight < playerRigidBody.position.y)
+        {
+            playerRigidBody.position = new Vector3(playerRigidBody.position.x, wallRunStartHeight, playerRigidBody.position.z);
+        }
+        else
+        {
+            wallRunStartHeight = playerRigidBody.position.y;
+        }
 
         // Appliquez une force horizontale pour maintenir le joueur contre le mur
         var isOnRight = isOnRightSide();

@@ -399,10 +399,10 @@ MonoBehaviour:
   playerTransform: {fileID: 298640664}
   PlayerRigidbody: {fileID: 298640663}
   GeneralVar: {fileID: 395330974}
-  grappin_sStreng: 15
+  grappin_sStreng: 18
   grappin_sBake: 75
   range: 50
-  tank: 255
+  tank: 256
   cooldown: 0.75
 --- !u!114 &395330972
 MonoBehaviour:
@@ -416,7 +416,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c196c8a5fd67084aab068f1fe9bb200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bodyTransform: {fileID: 638582228}
   headTransform: {fileID: 1654565370}
   playerTransform: {fileID: 298640664}
   playerRigidBody: {fileID: 298640663}
@@ -536,11 +535,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 169787231296690099, guid: feede7d31dfa4554a8acc8973ad44668, type: 3}
   m_PrefabInstance: {fileID: 1630859312}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &638582228 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4461132448572293185, guid: 5aa0272c9cbd6b5459c562c369f2b127, type: 3}
-  m_PrefabInstance: {fileID: 697581009}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &677287472 stripped
 RectTransform:

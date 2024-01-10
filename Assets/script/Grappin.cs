@@ -122,6 +122,7 @@ public class Grappin : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        var genVar_declaration = GeneralVar.declarations;
         if (_actif)
         {
             if (!Grappin_s_Visual.enabled)
@@ -159,6 +160,8 @@ public class Grappin : MonoBehaviour
                     _tract = false;
                     if (tank > 0)
                     {
+                        genVar_declaration.Set("playerFlying", true);
+
                         PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized),
                             ForceMode.Acceleration);
                         tank -= Time.deltaTime*10;
@@ -170,8 +173,7 @@ public class Grappin : MonoBehaviour
                 }
             }
         }
-
-        var state = GeneralVar.declarations.Get("PlayerState");
+        var state = genVar_declaration.Get("PlayerState");
         if (state.Equals(0) & _actif & (_backing | _tract))
         {
             var temp = Quaternion.LookRotation(PlayerRigidbody.velocity).eulerAngles.y;

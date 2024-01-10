@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3545178934253333899}
   - component: {fileID: 2547776140856499664}
   - component: {fileID: 4317596167534908608}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GameOverArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
