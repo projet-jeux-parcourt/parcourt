@@ -416,8 +416,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c196c8a5fd67084aab068f1fe9bb200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bodyTransform: {fileID: 298640664}
+  bodyTransform: {fileID: 638582228}
   headTransform: {fileID: 1654565370}
+  playerTransform: {fileID: 298640664}
   playerRigidBody: {fileID: 298640663}
   wallRunnable:
     serializedVersion: 2
@@ -536,6 +537,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 169787231296690099, guid: feede7d31dfa4554a8acc8973ad44668, type: 3}
   m_PrefabInstance: {fileID: 1630859312}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &638582228 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4461132448572293185, guid: 5aa0272c9cbd6b5459c562c369f2b127, type: 3}
+  m_PrefabInstance: {fileID: 697581009}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &677287472 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9039861049667915686, guid: d612a194f132b40488d2c109dbd94793, type: 3}
@@ -632,15 +638,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2035588790959924115, guid: 5aa0272c9cbd6b5459c562c369f2b127, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2035588790959924115, guid: 5aa0272c9cbd6b5459c562c369f2b127, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2035588790959924115, guid: 5aa0272c9cbd6b5459c562c369f2b127, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2035588790959924115, guid: 5aa0272c9cbd6b5459c562c369f2b127, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

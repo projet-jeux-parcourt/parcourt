@@ -367,8 +367,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 2138135546126820849}
+  timeBar: {fileID: 0}
   countdownTime: 60
+  initialWidth: 400
   loadSceneScript: {fileID: 2870043497966796207}
+  startColor: {r: 0, g: 1, b: 0, a: 1}
+  endColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &2870043497966796207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1312,7 +1316,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 5011010694474913077}
-  clickBlocker: {fileID: 6866791044549895577}
 --- !u!1 &8906805638080896395
 GameObject:
   m_ObjectHideFlags: 0
