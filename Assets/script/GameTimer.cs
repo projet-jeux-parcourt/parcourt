@@ -38,7 +38,7 @@ public class TimerScript : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             LoadNewScene();
         }
-        PlayerPrefs.SetFloat("FinalTime", countdownTime);
+        PlayerPrefs.SetFloat("FinalTime", TimeSet - countdownTime);
         UpdateTimer();
         UpdateTimeBar();
     }
