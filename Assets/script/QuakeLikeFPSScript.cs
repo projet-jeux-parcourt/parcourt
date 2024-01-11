@@ -161,7 +161,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
             var normalizedDirection = directionIntent.normalized;
             var reflux = -Vector3.Dot(normalizedDirection, playerRigidBody.velocity);
             reflux = (reflux < 1f) ? reflux : 1f;
-            playerRigidBody.AddForce(playerTransform.rotation * normalizedDirection * (speed*1.5f) + (playerRigidBody.velocity.normalized * reflux), ForceMode.Acceleration);
+            playerRigidBody.AddForce(playerTransform.rotation * (normalizedDirection * speed*1.5f) + (playerRigidBody.velocity.normalized * reflux), ForceMode.Acceleration);
         }
         if (wantToFly || genVarDeclaration.Get("playerFlying").Equals(true))
         {

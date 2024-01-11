@@ -161,11 +161,11 @@ public class Grappin : MonoBehaviour
                     {
                         genVar_declaration.Set("playerFlying", true);
                         var vitesse = Vector3.Dot(direction_normalized, playerRigidbody.velocity);
-                        if (vitesse < 10f)
+                        if (vitesse < 12f)
                         {
                             playerRigidbody.AddForce((grappin_sStreng * direction_normalized),
                                 ForceMode.Acceleration);
-                            tank -= Time.deltaTime*10;
+                            tank -= Time.deltaTime*20;
                         }
                     }
                     else
