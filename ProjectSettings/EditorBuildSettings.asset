@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/YouWinMenu.unity
     guid: 847822fe6bebbff459c41f470a437a24
+  - enabled: 1
+    path: Assets/Scenes/LevelSelection.unity
+    guid: e9d977ea0d17be748b77a220b6136879
   m_configObjects: {}
