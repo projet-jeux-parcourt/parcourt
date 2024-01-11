@@ -78,7 +78,7 @@ MonoBehaviour:
   playerTransform: {fileID: 0}
   PlayerRigidbody: {fileID: 0}
   GeneralVar: {fileID: 7808775891228290607}
-  grappin_sStreng: 18
+  grappin_sStreng: 15
   grappin_sBake: 75
   range: 50
   tank: 255
