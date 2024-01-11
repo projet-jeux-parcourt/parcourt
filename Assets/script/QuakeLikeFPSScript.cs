@@ -145,25 +145,28 @@ public class QuakeLikeFPSScript : MonoBehaviour
         }
         if (state==0)
         {
-            if (playerRigidBody.velocity.magnitude >= speed*1.6){
-                playerRigidBody.velocity = 0.995f * playerRigidBody.velocity;
-            }
-            if (playerRigidBody.velocity.magnitude < speed*1.6)
-            {
-                var normalizedDirection = directionIntent.normalized;
-                playerRigidBody.AddForce(playerTransform.rotation * normalizedDirection * (speed*2), ForceMode.Acceleration);
-            }
-            
-            if (wantToFly || genVar_declaration.Get("playerFlying").Equals(true))
-            {
-                playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.Acceleration);
-            }
+            AirControl(genVar_declaration);
         }
 
         directionIntent = Vector3.zero;
         wantToJump = false;
         wantToFly = false;
         genVar_declaration.Set("playerFlying", false);
+    }
+
+    private void AirControl(VariableDeclarations genVarDeclaration)
+    {
+        playerRigidBody.velocity = 0.995f * playerRigidBody.velocity;
+        if (directionIntent.magnitude != 0f){
+            var normalizedDirection = directionIntent.normalized;
+            var reflux = -Vector3.Dot(normalizedDirection, playerRigidBody.velocity);
+            reflux = (reflux < 1f) ? reflux : 1f;
+            playerRigidBody.AddForce(playerTransform.rotation * normalizedDirection * (speed*1.5f) + (playerRigidBody.velocity.normalized * reflux), ForceMode.Acceleration);
+        }
+        if (wantToFly || genVarDeclaration.Get("playerFlying").Equals(true))
+        {
+            playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.Acceleration);
+        }
     }
 
     private bool isforward(float a, float b)

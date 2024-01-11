@@ -11,7 +11,7 @@ public class Grappin : MonoBehaviour
     public Transform Grappin_s;
     public Transform MainCamera;
     public Transform playerTransform;
-    public Rigidbody PlayerRigidbody;
+    public Rigidbody playerRigidbody;
     public Variables GeneralVar; // "PlayerState: 0 = mid-air, 1 = walk, 2 = wall-running
     public float grappin_sStreng;
     public float grappin_sBake;
@@ -94,18 +94,18 @@ public class Grappin : MonoBehaviour
         }
         if (dist > _bake_range)
         {
-            float scal = Vector3.Dot(direction_normalized, PlayerRigidbody.velocity);
+            float scal = Vector3.Dot(direction_normalized, playerRigidbody.velocity);
             if (scal < 0)
             {
                 _backing = true;
                 if ((-scal*1.2f) < (grappin_sBake*Time.deltaTime))
                 {
-                    PlayerRigidbody.AddForce(-scal * 1.2f * direction_normalized, ForceMode.Impulse);
+                    playerRigidbody.AddForce(-scal * 1.2f * direction_normalized, ForceMode.Impulse);
 
                 }
                 else
                 {
-                    PlayerRigidbody.AddForce((grappin_sBake+(grappin_sStreng*0.5f)) * direction_normalized, ForceMode.Acceleration);
+                    playerRigidbody.AddForce((grappin_sBake+(grappin_sStreng*0.5f)) * direction_normalized, ForceMode.Acceleration);
                     if (dist < range)
                     {
                         _bake_range = dist;
@@ -160,10 +160,13 @@ public class Grappin : MonoBehaviour
                     if (tank > 0)
                     {
                         genVar_declaration.Set("playerFlying", true);
-
-                        PlayerRigidbody.AddForce((grappin_sStreng * direction_normalized),
-                            ForceMode.Acceleration);
-                        tank -= Time.deltaTime*10;
+                        var vitesse = Vector3.Dot(direction_normalized, playerRigidbody.velocity);
+                        if (vitesse < 10f)
+                        {
+                            playerRigidbody.AddForce((grappin_sStreng * direction_normalized),
+                                ForceMode.Acceleration);
+                            tank -= Time.deltaTime*10;
+                        }
                     }
                     else
                     {
@@ -175,7 +178,7 @@ public class Grappin : MonoBehaviour
         var state = genVar_declaration.Get("PlayerState");
         if (state.Equals(0) & _actif & (_backing | _tract))
         {
-            var temp = Quaternion.LookRotation(PlayerRigidbody.velocity).eulerAngles.y;
+            var temp = Quaternion.LookRotation(playerRigidbody.velocity).eulerAngles.y;
             if (_unflooring)
             {
                 _unflooring = false;

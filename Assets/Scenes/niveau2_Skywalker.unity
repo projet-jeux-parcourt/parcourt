@@ -2407,6 +2407,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 298640663}
     - target: {fileID: 5193612619303002263, guid: 14017a1266f5ff8469ebf81d264915f8, type: 3}
+      propertyPath: playerRigidbody
+      value: 
+      objectReference: {fileID: 298640663}
+    - target: {fileID: 5193612619303002263, guid: 14017a1266f5ff8469ebf81d264915f8, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 298640664}
