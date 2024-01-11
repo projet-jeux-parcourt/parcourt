@@ -136,7 +136,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
 
             if (wantToJump)
             {
-                playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.VelocityChange);
+                playerRigidBody.AddForce(Vector3.up * 6f, ForceMode.VelocityChange);
             }
         } 
         else if (isWallRunning)
@@ -145,12 +145,15 @@ public class QuakeLikeFPSScript : MonoBehaviour
         }
         if (state==0)
         {
-            playerRigidBody.velocity = 0.99f * playerRigidBody.velocity;
+            if (playerRigidBody.velocity.magnitude >= speed*1.6){
+                playerRigidBody.velocity = 0.995f * playerRigidBody.velocity;
+            }
             if (playerRigidBody.velocity.magnitude < speed*1.6)
             {
                 var normalizedDirection = directionIntent.normalized;
                 playerRigidBody.AddForce(playerTransform.rotation * normalizedDirection * (speed*2), ForceMode.Acceleration);
             }
+            
             if (wantToFly || genVar_declaration.Get("playerFlying").Equals(true))
             {
                 playerRigidBody.AddForce(Vector3.up * 5f, ForceMode.Acceleration);
@@ -228,7 +231,7 @@ public class QuakeLikeFPSScript : MonoBehaviour
         if (wantToJump)
         {
             var direction = wallWhereYouRun.rotation * (isOnRight ? Vector3.right : Vector3.left);
-            playerRigidBody.AddForce((Vector3.up * 5f) + (direction *5f), ForceMode.VelocityChange);
+            playerRigidBody.AddForce((Vector3.up * 6f) + (direction *5f), ForceMode.VelocityChange);
             isWallRunning = false;
         }
     }
@@ -237,7 +240,15 @@ public class QuakeLikeFPSScript : MonoBehaviour
     {
         // Impl�mentez ici la logique pour d�terminer si les conditions pour continuer le wall-run sont toujours remplies
         // Par exemple, v�rifier si le joueur est toujours � c�t� d'un mur "wallToRun"
-        var met = Physics.CheckSphere(playerTransform.position + Vector3.up * (0.1f + 0.8f), 0.8f, wallRunnable);
+        var contact = Physics.OverlapSphere(playerTransform.position + Vector3.up * (0.1f + 0.8f), 0.8f, wallRunnable);
+        var met = false;
+        for (var i = 0; i < contact.Length; ++i)
+        {
+            if (contact[i].transform == wallWhereYouRun)
+            {
+                met = true;
+            }
+        }
         if (!met)
         {
             playerTransform.rotation = Quaternion.Euler(0, playerTransform.eulerAngles.y, 0);
