@@ -20,4 +20,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelSelection.unity
     guid: e9d977ea0d17be748b77a220b6136879
+  - enabled: 1
+    path: Assets/Scenes/Tutoriel.unity
+    guid: 629938c68c5f0ea489a74c6a3cc7a677
+  - enabled: 1
+    path: Assets/Scenes/Niveau1_BaseAfterBase.unity
+    guid: c638ddcc98ec8c44088ab8cb9cef43ab
+  - enabled: 1
+    path: Assets/Scenes/niveau2_Skywalker.unity
+    guid: d6491fe473da62c4ca4db09c67eacfdc
   m_configObjects: {}
