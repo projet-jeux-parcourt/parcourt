@@ -246,7 +246,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Quitter
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -473,6 +473,7 @@ GameObject:
   - component: {fileID: 5782707302153995430}
   - component: {fileID: 6598517330327286756}
   - component: {fileID: 8941315400615346859}
+  - component: {fileID: 2312757240502877360}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -595,6 +596,18 @@ MonoBehaviour:
           m_StringArgument: ResumeGame()
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2312757240502877360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3865154133779831248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53d33e68e11c1574bbbee3972bb92625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3874161865787077635
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,7 +667,7 @@ MonoBehaviour:
   countdownTime: 180
   initialWidth: 1500
   loadSceneScript: {fileID: 6419607963782577277}
-  startColor: {r: 0, g: 1, b: 0, a: 1}
+  startColor: {r: 0, g: 0.3018868, b: 0.23450327, a: 1}
   endColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &6419607963782577277
 MonoBehaviour:
@@ -1462,7 +1475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad815fb310403d48a3e4188f0093585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseCanvas: {fileID: 0}
+  pauseCanvas: {fileID: 5011010694474913077}
   isPaused: 0
 --- !u!1 &8532222676313899508
 GameObject:

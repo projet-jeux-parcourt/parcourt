@@ -1,7 +1,4 @@
-using System;
 using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class QuakeLikeFPSScript : MonoBehaviour

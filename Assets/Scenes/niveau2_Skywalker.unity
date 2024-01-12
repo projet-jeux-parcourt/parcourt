@@ -2242,8 +2242,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 780241170}
-  m_LocalRotation: {x: -0, y: -0.079422854, z: -0, w: 0.996841}
-  m_LocalPosition: {x: 103.6, y: 16.3, z: -89.4}
+  m_LocalRotation: {x: 0, y: -0.21643952, z: 0, w: 0.97629607}
+  m_LocalPosition: {x: 103.6, y: 14.5, z: -89.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2255,7 +2255,7 @@ Transform:
   - {fileID: 1202722710}
   m_Father: {fileID: 1043963967}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: -9.111, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -25, z: 0}
 --- !u!4 &817151773 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5776050052008310625, guid: d759b0d4dc309f64e8fc765a218b05f3, type: 3}
@@ -5326,6 +5326,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: music
       objectReference: {fileID: 0}
+    - target: {fileID: 8811815676449198296, guid: 5901ea63dc758e742ae2c91655d5894c, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 74b482bcecd490b4495eeb99fc449f32, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

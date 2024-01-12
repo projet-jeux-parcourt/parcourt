@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class VictorySceneScript : MonoBehaviour
 {
