@@ -22,7 +22,7 @@ public class QuitGameOnClick : MonoBehaviour
     }
 
     // Méthode appelée lorsque le bouton est cliqué
-    void QuitGame()
+    public void QuitGame()
     {
         // Affiche un message dans la console (facultatif)
         Debug.Log("Quitting the game...");
